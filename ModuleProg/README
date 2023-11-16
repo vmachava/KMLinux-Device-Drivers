@@ -1,0 +1,33 @@
+The below examples explain module programming concepts:
+------------------------------------------------------
++ moduleprog/hello/hello.c: how to write template of Module programming
++ moduleprog/modparam/modparam1.c,modparam2.c:   Module parameter usage.
++ moduleprog/modparam/add.c,avg.c: What is Module Dependency? How to overcome? What is modprobe? How it works?
++ moduleprog/modparam/start.c,stop.c: how to compile multiple modules.
+
+
+Module Build
+-----------
+Before build a module to decide which kernel version to load a module.
+
+Two things required to build a module:
+1. Kernel headers (or) kernel source
+   standarad linux header files located in linux: /usr/src/linux-headers-`uname -r`
+	/lib/modules/`uname -r`/build -> /usr/src/linux-headers-`uname -r`
+2. Makefile mention kernel build systems syntax.
+    obj-m := hello.o
+
+Inside kernel source tree:
+-------------------------
+Well integrated into the kernel configuration/compilation
+process Driver can be built statically if needed.
+
+$ make M=drivers/input/keyboard/ modules
+
+Outside Kernel source tree:
+--------------------------
+Not integrated to the kernel configuration/compilation process, needs to be built separately,the driver cannot be built statically.
+
+Makefile contains the below kernel build system syntax.
+       obj-m := hello.o
+$ make -C <KER_DIR> M=<PWD> modules

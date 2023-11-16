@@ -1,0 +1,52 @@
+From d5d16e28e474e078661b3d95d42fbd0d16882139 Mon Sep 17 00:00:00 2001
+From: root <root@VTA0015.(none)>
+Date: Fri, 24 May 2013 15:41:15 +0530
+Subject: [PATCH] New System call Added
+
+---
+ arch/x86/syscalls/syscall_64.tbl |    1 +
+ include/linux/syscalls.h         |    2 ++
+ kernel/module.c                  |    7 +++++++
+ 3 files changed, 10 insertions(+)
+
+diff --git a/arch/x86/syscalls/syscall_64.tbl b/arch/x86/syscalls/syscall_64.tbl
+index 51171ae..c004627 100644
+--- a/arch/x86/syscalls/syscall_64.tbl
++++ b/arch/x86/syscalls/syscall_64.tbl
+@@ -319,6 +319,7 @@
+ 310	64	process_vm_readv	sys_process_vm_readv
+ 311	64	process_vm_writev	sys_process_vm_writev
+ 312	64	kcmp			sys_kcmp
++313	64	newsyscall		sys_newsyscall  
+ 
+ #
+ # x32-specific system call numbers start at 512 to avoid cache impact
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 19439c7..f8f06b9 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -860,4 +860,6 @@ asmlinkage long sys_process_vm_writev(pid_t pid,
+ 
+ asmlinkage long sys_kcmp(pid_t pid1, pid_t pid2, int type,
+ 			 unsigned long idx1, unsigned long idx2);
++
++asmlinkage int sys_newsyscall(void);
+ #endif
+diff --git a/kernel/module.c b/kernel/module.c
+index 4edbd9c..04ed55a 100644
+--- a/kernel/module.c
++++ b/kernel/module.c
+@@ -3537,3 +3537,10 @@ void module_layout(struct module *mod,
+ }
+ EXPORT_SYMBOL(module_layout);
+ #endif
++asmlinkage int sys_newsyscall(void)
++{
++        printk ("This is new system call funtion\n");
++        return 0;
++}
++
++
+-- 
+1.7.10.4
+

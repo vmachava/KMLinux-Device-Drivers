@@ -1,0 +1,14 @@
+snull demo using Talker/Listener Datagram Socket app
+----------------------------------------------------
+
+snull test w/ simple socket app that's bound to interface sn1 (w/ SO_BINDTODEVICE):
+[IMP: we *require* to use UDP sockets for SO_BINDTODEVICE to work!]
+
+Setup:
+ifconfig sn1 10.10.1.1
+
+
+See the Tx/Rx w/ wireshark...
+sn0 & sn1 filter:
+(ip.addr eq 10.10.0.1 or ip.addr eq 10.10.1.2) and (udp.port eq 6100)
+

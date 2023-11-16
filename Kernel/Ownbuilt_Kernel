@@ -1,0 +1,40 @@
+
+Install Pacakges:
+----------------
+$ sudo apt-get install ncurses-dev libssl-dev
+
+Kernel Configuration, Compilation and Install
+---------------------------------------------
+1. Download Kernel Source from Kernel masters server:
+	$ cd ~/KM_GIT
+	$ git clone git@138.197.197.6:root/kernel-4.4.157.git
+2. Kernel Configuration
+	$ cd ~/KM_GIT/kernel-4.4.157
+	$ du -sh .
+	1.1 G
+	$ make menuconfig  (By default configuration file for x86 platform is /boot/config-`uname -r`)
+	out put of kernel configuration is .config file.
+	CONFIG_<option>=y/m/notset ;   y -Static ; m-module(Dynamic)
+3. Kernel Compilaton
+	$ make -j4  (Static Compilation)
+	out put is vmlinux (kernel raw image) - virtual memory linux
+	$ du -sh vmlinux (with out compressing)
+	389 M
+	$ make modules  (Dynamic Compilation)
+	out put is .ko 
+	$ du -sh . 
+    	13 G
+4. Kernel Installation
+	$ sudo make modules_install (.ko installation)
+	out put is /lib/modules/`uname -r`/build/
+	$ sudo make install 
+	out put is /boot/vmlinuz-`uname -r`  (vmlinuz is compressed linux kernel is virtual memory linux gZip)
+	out put is /boot/config-`uname -r`
+	out put is /boot/System.map-`uname -r`
+	out put is /boot/initrd-`uname -r`
+	out put is /boot/abi-`uname -r`
+	$ du -sh vmlinuz-`uname -r`
+	6.6 M
+5. Reboot 
+	$ sudo reboot
+

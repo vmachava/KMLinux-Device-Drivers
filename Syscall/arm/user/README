@@ -1,0 +1,2 @@
+arm-linux-androideabi-as -o hello.o hello.S
+arm-linux-androideabi-ld -s -o hello hello.o

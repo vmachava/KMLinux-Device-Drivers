@@ -1,0 +1,83 @@
+From 3b66095e1471dbd9bbb38b3a1b125c965274b569 Mon Sep 17 00:00:00 2001
+From: chandanakishori <chandana.kishori@votarytech.com>
+Date: Wed, 22 May 2013 11:04:01 +0530
+Subject: [PATCH] sys_my_add systemcall added in kernel space
+
+---
+ arch/arm/include/asm/unistd.h  |    1 +
+ arch/arm/kernel/calls.S        |    1 +
+ arch/arm/kernel/entry-common.S |    3 +++
+ arch/arm/kernel/sys_arm.c      |    6 ++++++
+ include/linux/syscalls.h       |    1 +
+ 5 files changed, 12 insertions(+)
+
+diff --git a/arch/arm/include/asm/unistd.h b/arch/arm/include/asm/unistd.h
+index 4a11237..6f90571 100644
+--- a/arch/arm/include/asm/unistd.h
++++ b/arch/arm/include/asm/unistd.h
+@@ -404,6 +404,7 @@
+ #define __NR_setns			(__NR_SYSCALL_BASE+375)
+ #define __NR_process_vm_readv		(__NR_SYSCALL_BASE+376)
+ #define __NR_process_vm_writev		(__NR_SYSCALL_BASE+377)
++#define __NR_my_add                     (__NR_SYSCALL_BASE+378)
+ 
+ /*
+  * The following SWIs are ARM private.
+diff --git a/arch/arm/kernel/calls.S b/arch/arm/kernel/calls.S
+index 463ff4a..3e5bf06 100644
+--- a/arch/arm/kernel/calls.S
++++ b/arch/arm/kernel/calls.S
+@@ -387,6 +387,7 @@
+ /* 375 */	CALL(sys_setns)
+ 		CALL(sys_process_vm_readv)
+ 		CALL(sys_process_vm_writev)
++                CALL(sys_my_add_wrapper)
+ #ifndef syscalls_counted
+ .equ syscalls_padding, ((NR_syscalls + 3) & ~3) - NR_syscalls
+ #define syscalls_counted
+diff --git a/arch/arm/kernel/entry-common.S b/arch/arm/kernel/entry-common.S
+index b2a27b6..ac5cd00 100644
+--- a/arch/arm/kernel/entry-common.S
++++ b/arch/arm/kernel/entry-common.S
+@@ -527,6 +527,9 @@ sys_syscall:
+ 		b	sys_ni_syscall
+ ENDPROC(sys_syscall)
+ 
++sys_my_add_wrapper:
++                  b sys_my_add
++ENDPROC(sys_my_add_wrapper)
+ sys_fork_wrapper:
+ 		add	r0, sp, #S_OFF
+ 		b	sys_fork
+diff --git a/arch/arm/kernel/sys_arm.c b/arch/arm/kernel/sys_arm.c
+index d2b1779..bbe8208 100644
+--- a/arch/arm/kernel/sys_arm.c
++++ b/arch/arm/kernel/sys_arm.c
+@@ -44,6 +44,12 @@ asmlinkage int sys_fork(struct pt_regs *regs)
+ /* Clone a task - this clones the calling program thread.
+  * This is called indirectly via a small wrapper
+  */
++asmlinkage long sys_my_add(int a,int b)
++{
++    printk(KERN_ALERT"The addition is %d\n",a+b);
++    return a+b;
++}
++
+ asmlinkage int sys_clone(unsigned long clone_flags, unsigned long newsp,
+ 			 int __user *parent_tidptr, int tls_val,
+ 			 int __user *child_tidptr, struct pt_regs *regs)
+diff --git a/include/linux/syscalls.h b/include/linux/syscalls.h
+index 86a24b1..1dfebd5 100644
+--- a/include/linux/syscalls.h
++++ b/include/linux/syscalls.h
+@@ -250,6 +250,7 @@ extern struct trace_event_functions exit_syscall_print_funcs;
+ 
+ #endif /* CONFIG_HAVE_SYSCALL_WRAPPERS */
+ 
++asmlinkage long sys_my_add(int,int);
+ asmlinkage long sys_time(time_t __user *tloc);
+ asmlinkage long sys_stime(time_t __user *tptr);
+ asmlinkage long sys_gettimeofday(struct timeval __user *tv,
+-- 
+1.7.10.4
+

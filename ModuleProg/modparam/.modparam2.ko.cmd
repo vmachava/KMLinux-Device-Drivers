@@ -1,0 +1,1 @@
+cmd_/home/km/Downloads/git/ldd/ModuleProg/modparam/modparam2.ko := ld -r -m elf_x86_64  -z max-page-size=0x200000 -T ./scripts/module-common.lds --build-id  -o /home/km/Downloads/git/ldd/ModuleProg/modparam/modparam2.ko /home/km/Downloads/git/ldd/ModuleProg/modparam/modparam2.o /home/km/Downloads/git/ldd/ModuleProg/modparam/modparam2.mod.o ;  true
